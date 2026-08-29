@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native'
 // ─── Importação das telas ─────────────────────────────────────────────────
 import LoginScreen from './src/screens/LoginScreen'
 import CadastroScreen from './src/screens/CadastroScreen'
-import PerfilScreen from './src/screens/PerfilScreen'
+import TabNavigator from './src/components/TabNavigator'
 
 /**
  * App principal
@@ -25,21 +25,21 @@ export default function App() {
     setTelaAtiva('cadastro')
   }
 
-  function irParaPerfil() {
-    setTelaAtiva('perfil')
+  function irParaApp() {
+    setTelaAtiva('app')
   }
 
   // ─── Renderização condicional ────────────────────────────────────────────
   function renderizarTela() {
     switch (telaAtiva) {
       case 'login':
-        return <LoginScreen onCadastro={irParaCadastro} onLogin={irParaPerfil} />
+        return <LoginScreen onCadastro={irParaCadastro} onLogin={irParaApp} />
       case 'cadastro':
-        return <CadastroScreen onVoltar={irParaLogin} onCadastroSucesso={irParaPerfil} />
-      case 'perfil':
-        return <PerfilScreen onLogout={irParaLogin} />
+        return <CadastroScreen onVoltar={irParaLogin} onCadastroSucesso={irParaApp} />
+      case 'app':
+        return <TabNavigator onLogout={irParaLogin} />
       default:
-        return <LoginScreen onCadastro={irParaCadastro} onLogin={irParaPerfil} />
+        return <LoginScreen onCadastro={irParaCadastro} onLogin={irParaApp} />
     }
   }
 

@@ -17,14 +17,17 @@ import { styles } from '../styles/perfilStyles'
  * Props:
  * - onLogout: função para fazer logout e voltar ao login
  */
-export default function PerfilScreen({ onLogout }) {
+export default function PerfilScreen({ onLogout, onAgendamento }) {
+  // ─── Estado do nome — pode ser alterado dinamicamente ────────────────────
+  const [nome, setNome] = useState('Julio')
+
   // ─── Estado da busca ─────────────────────────────────────────────────────
   const [textoBusca, setTextoBusca] = useState('')
 
   // ─── Dados estáticos do usuário ──────────────────────────────────────────
   const usuario = {
-    nome: 'Maria Silva',
-    username: '@mariasilva',
+    nome: nome,          // usa o estado em vez de valor fixo
+    username: '@julio',
     fotoPerfil: 'https://i.pravatar.cc/300?img=47', // foto aleatória
     bio: 'Desenvolvedora mobile | React Native | Amante de tecnologia 💻',
     email: 'maria.silva@email.com',
@@ -76,7 +79,6 @@ export default function PerfilScreen({ onLogout }) {
   ]
 
   function handleAcaoPress(acao) {
-    // Se for o botão de logout
     if (acao.isLogout) {
       Alert.alert(
         'Sair',
@@ -88,7 +90,7 @@ export default function PerfilScreen({ onLogout }) {
             style: 'destructive',
             onPress: () => {
               if (onLogout) {
-                onLogout() // Navega de volta para o login
+                onLogout()
               }
             }
           }
@@ -101,7 +103,8 @@ export default function PerfilScreen({ onLogout }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+    <ScrollView>
       
       {/* ── Header ── */}
       <View style={styles.header}>
@@ -175,5 +178,6 @@ export default function PerfilScreen({ onLogout }) {
       <View style={{ height: 40 }} />
 
     </ScrollView>
+    </View>
   )
 }

@@ -1,97 +1,123 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
+  TextInput,
   TouchableOpacity,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
+  StyleSheet,
 } from 'react-native'
-import InputField from '../components/InputField'
-import { styles } from '../styles/loginStyles'
 
-/**
- * Tela de Login
- * Permite o usuário fazer login com e-mail e senha
- * 
- * Props:
- * - onCadastro: função para navegar para tela de cadastro
- * - onLogin: função para navegar para tela de perfil após login
- */
 export default function LoginScreen({ onCadastro, onLogin }) {
-  // ─── Estados do formulário ───────────────────────────────────────────────
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
 
-  // ─── Função de envio ─────────────────────────────────────────────────────
   function handleLogin() {
-    // Validação simples
     if (!email || !senha) {
-      Alert.alert(
-        'Atenção',
-        'Por favor, preencha e-mail e senha.'
-      )
+      Alert.alert('Atenção', 'Por favor, preencha e-mail e senha.')
       return
     }
 
-    // Alerta de confirmação e navega para o perfil
     Alert.alert(
       'Login realizado!',
       `Bem-vindo(a), ${email}!`,
-      [
-        {
-          text: 'OK',
-          onPress: () => {
-            if (onLogin) {
-              onLogin() // Navega para a tela de perfil
-            }
-          }
-        }
-      ]
+      [{ text: 'OK', onPress: () => onLogin() }]
     )
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <View>
-        {/* ── Cabeçalho ── */}
-        <Text style={styles.titulo}>Login</Text>
+    <View style={styles.container}>
 
-        {/* ── E-mail ── */}
-        <InputField
-          label="E-mail"
-          placeholder="seuemail@exemplo.com"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+      <Text style={styles.titulo}>Login</Text>
 
-        {/* ── Senha ── */}
-        <InputField
-          label="Senha"
-          placeholder="Digite sua senha"
-          value={senha}
-          onChangeText={setSenha}
-          secureTextEntry
-        />
+      <Text style={styles.label}>E-mail:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="seuemail@exemplo.com"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
+      />
 
-        {/* ── Botão Entrar ── */}
-        <TouchableOpacity style={styles.botaoEntrar} onPress={handleLogin}>
-          <Text style={styles.botaoTexto}>Entrar</Text>
+      <Text style={styles.label}>Senha:</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Digite sua senha"
+        secureTextEntry={true}
+        value={senha}
+        onChangeText={setSenha}
+      />
+
+      <TouchableOpacity style={styles.botao} onPress={handleLogin}>
+        <Text style={styles.botaoTexto}>Entrar</Text>
+      </TouchableOpacity>
+
+      <View style={styles.cadastroContainer}>
+        <Text style={styles.cadastroTexto}>Não tem uma conta? </Text>
+        <TouchableOpacity onPress={onCadastro}>
+          <Text style={styles.cadastroLink}>Cadastre-se</Text>
         </TouchableOpacity>
-
-        {/* ── Link para Cadastro ── */}
-        <View style={styles.cadastroContainer}>
-          <Text style={styles.cadastroTexto}>Não tem uma conta?</Text>
-          <TouchableOpacity onPress={onCadastro}>
-            <Text style={styles.cadastroLink}>Cadastre-se</Text>
-          </TouchableOpacity>
-        </View>
       </View>
-    </KeyboardAvoidingView>
+
+    </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    padding: 24,
+    justifyContent: 'center',
+  },
+  titulo: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#1a237e',
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#555',
+    marginBottom: 5,
+    marginTop: 12,
+  },
+  input: {
+    height: 48,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    backgroundColor: '#fff',
+    fontSize: 15,
+  },
+  botao: {
+    backgroundColor: '#1a237e',
+    borderRadius: 8,
+    paddingVertical: 14,
+    alignItems: 'center',
+    marginTop: 28,
+  },
+  botaoTexto: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cadastroContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  cadastroTexto: {
+    color: '#555',
+    fontSize: 14,
+  },
+  cadastroLink: {
+    color: '#1a237e',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+})
