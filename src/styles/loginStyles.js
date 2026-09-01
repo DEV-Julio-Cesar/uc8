@@ -1,8 +1,5 @@
 import { StyleSheet } from 'react-native'
 
-// Estilos da tela de Login
-// Mantém o mesmo padrão visual da tela de Cadastro
-
 export const styles = StyleSheet.create({
   // ─── Container principal ────────────────────────────────────────────────
   container: {

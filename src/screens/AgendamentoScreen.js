@@ -10,9 +10,9 @@ import {
   Alert,
   Linking,
 } from 'react-native'
-import { styles } from './flatlistStyles'
+import { styles } from '../styles/agendamentoStyles'
 
-// ─── Dados ────────────────────────────────────────────────────────────────────
+// ─── Dados iniciais ───────────────────────────────────────────────────────────
 const agendamentosIniciais = [
   { id: '1', nome: 'Julio',    tarefa: 'Reunião com o cliente'      },
   { id: '2', nome: 'Maria',    tarefa: 'Consulta médica'            },
@@ -25,14 +25,13 @@ const agendamentosIniciais = [
 ]
 
 // ─── Componente ───────────────────────────────────────────────────────────────
-export default function Agendamento() {
-
-  const [agendamentos, setAgendamentos]  = useState(
+export default function AgendamentoScreen() {
+  const [agendamentos, setAgendamentos] = useState(
     agendamentosIniciais.map((item) => ({ ...item, data: new Date() }))
   )
-  const [modalVisivel, setModalVisivel]  = useState(false)
-  const [novoNome, setNovoNome]          = useState('')
-  const [novaTarefa, setNovaTarefa]      = useState('')
+  const [modalVisivel, setModalVisivel] = useState(false)
+  const [novoNome, setNovoNome]         = useState('')
+  const [novaTarefa, setNovaTarefa]     = useState('')
 
   // ─── Funções ──────────────────────────────────────────────────────────────
 
@@ -41,15 +40,18 @@ export default function Agendamento() {
   }
 
   function abrirPicker(id) {
+    const ag = agendamentos.find((ag) => ag.id === id)
+    const dataAtual = ag?.data instanceof Date ? ag.data : new Date()
+
     DateTimePickerAndroid.open({
-      value: agendamentos.find((ag) => ag.id === id).data,
+      value: dataAtual,
       mode: 'date',
       minimumDate: new Date(),
-      onValueChange: (evento, dataSelecionada) => {
-        if (dataSelecionada) {
+      onValueChange: (_event, dataSelecionada) => {
+        if (dataSelecionada instanceof Date) {
           setAgendamentos((lista) =>
-            lista.map((ag) =>
-              ag.id === id ? { ...ag, data: dataSelecionada } : ag
+            lista.map((item) =>
+              item.id === id ? { ...item, data: dataSelecionada } : item
             )
           )
         }
@@ -90,10 +92,7 @@ export default function Agendamento() {
         <Text style={styles.id}>#{item.id}</Text>
         <Text style={styles.nome}>{item.nome}</Text>
         <Text style={styles.tarefa}>{item.tarefa}</Text>
-        <TouchableOpacity
-          style={styles.botaoData}
-          onPress={() => abrirPicker(item.id)}
-        >
+        <TouchableOpacity style={styles.botaoData} onPress={() => abrirPicker(item.id)}>
           <Text style={styles.data}>📅 {formatarData(item.data)}</Text>
         </TouchableOpacity>
       </View>
@@ -116,14 +115,11 @@ export default function Agendamento() {
         renderItem={renderizarItem}
       />
 
-      <TouchableOpacity
-        style={styles.botaoAdicionar}
-        onPress={() => setModalVisivel(true)}
-      >
+      <TouchableOpacity style={styles.botaoAdicionar} onPress={() => setModalVisivel(true)}>
         <Text style={styles.botaoAdicionarTexto}>+ Novo Agendamento</Text>
       </TouchableOpacity>
 
-      <Modal visible={modalVisivel} transparent={true} animationType="slide">
+      <Modal visible={modalVisivel} transparent animationType="slide">
         <View style={styles.modalFundo}>
           <View style={styles.modalContainer}>
 

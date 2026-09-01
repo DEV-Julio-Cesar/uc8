@@ -1,8 +1,5 @@
 import { StyleSheet } from 'react-native'
 
-// Estilos da tela de Perfil
-// Design inspirado em redes sociais modernas
-
 export const styles = StyleSheet.create({
   // ─── Container principal ────────────────────────────────────────────────
   container: {
@@ -10,7 +7,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f0f4f8',
   },
 
-  // ─── Header (cabeçalho) ─────────────────────────────────────────────────
+  // ─── Header ─────────────────────────────────────────────────────────────
   header: {
     backgroundColor: '#1a237e',
     paddingTop: 50,
@@ -32,10 +29,10 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // ─── Seção de perfil (foto + nome) ──────────────────────────────────────
+  // ─── Foto + nome ─────────────────────────────────────────────────────────
   perfilContainer: {
     alignItems: 'center',
-    marginTop: -40, // sobrepõe o header
+    marginTop: -40,
     marginBottom: 16,
   },
 
@@ -66,7 +63,7 @@ export const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  // ─── Botão "Ver mais" ───────────────────────────────────────────────────
+  // ─── Botão ver mais ──────────────────────────────────────────────────────
   botaoVerMais: {
     backgroundColor: '#1a237e',
     paddingVertical: 10,
@@ -82,7 +79,7 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  // ─── Estatísticas (posts, seguidores, seguindo) ─────────────────────────
+  // ─── Estatísticas ────────────────────────────────────────────────────────
   estatisticasContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -115,7 +112,7 @@ export const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  // ─── Barra de pesquisa ──────────────────────────────────────────────────
+  // ─── Busca ───────────────────────────────────────────────────────────────
   buscaContainer: {
     marginHorizontal: 24,
     marginBottom: 20,
@@ -135,7 +132,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 3,
   },
 
-  // ─── Lista de posts/ações ───────────────────────────────────────────────
+  // ─── Ações ───────────────────────────────────────────────────────────────
   acoesContainer: {
     marginHorizontal: 24,
   },

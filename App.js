@@ -1,10 +1,13 @@
+import 'react-native-gesture-handler'
 import { StatusBar } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-import LoginScreen from './src/styles/login/LoginScreen'
-import CadastroScreen from './src/styles/cadastro/CadastroScreen'
-import TabNavigator from './src/styles/tabNavigator/TabNavigator'
+import LoginScreen from './src/screens/login/LoginScreen'
+import CadastroScreen from './src/screens/cadastro/CadastroScreen'
+import TabNavigator from './src/navigation/TabNavigator'
 
 const Stack = createStackNavigator()
 
@@ -20,9 +23,11 @@ function RootNavigator() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RootNavigator />
-      <StatusBar style="auto" />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <RootNavigator />
+        <StatusBar style="auto" />
+      </NavigationContainer>
+    </SafeAreaProvider>
   )
 }

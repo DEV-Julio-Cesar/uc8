@@ -1,15 +1,14 @@
 import { StyleSheet } from 'react-native'
 
 export const styles = StyleSheet.create({
-
-  // ─── Container ─────────────────────────────────────────────────────────
+  // ─── Container ───────────────────────────────────────────────────────────
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
     paddingTop: 50,
   },
 
-  // ─── Título ─────────────────────────────────────────────────────────────
+  // ─── Título ──────────────────────────────────────────────────────────────
   titulo: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -18,7 +17,7 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  // ─── Link ───────────────────────────────────────────────────────────────
+  // ─── Link ────────────────────────────────────────────────────────────────
   link: {
     fontSize: 14,
     color: '#1565c0',
@@ -27,7 +26,7 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // ─── Card da lista ──────────────────────────────────────────────────────
+  // ─── Card ────────────────────────────────────────────────────────────────
   card: {
     backgroundColor: '#fff',
     marginHorizontal: 16,
@@ -56,7 +55,7 @@ export const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ─── Botão de data ──────────────────────────────────────────────────────
+  // ─── Botão de data ────────────────────────────────────────────────────────
   botaoData: {
     marginTop: 8,
     alignSelf: 'flex-start',
@@ -72,7 +71,7 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // ─── Botão novo agendamento ─────────────────────────────────────────────
+  // ─── Botão adicionar ──────────────────────────────────────────────────────
   botaoAdicionar: {
     backgroundColor: '#1a237e',
     margin: 16,
@@ -87,7 +86,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
-  // ─── Modal ───────────────────────────────────────────────────────────────
+  // ─── Modal ────────────────────────────────────────────────────────────────
   modalFundo: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',

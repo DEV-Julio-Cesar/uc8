@@ -1,9 +1,9 @@
 import { Text, TextInput } from 'react-native'
-import { styles } from '../../../src/styles/cadastro/cadastroStyles'
+import { styles } from '../screens/cadastro/cadastroStyles'
 
 /**
  * Componente reutilizável para campos de entrada de texto
- * 
+ *
  * Props:
  * - label: texto do rótulo acima do campo
  * - value: valor atual do campo (controlado pelo useState)

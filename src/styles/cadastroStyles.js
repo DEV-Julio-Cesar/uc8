@@ -1,8 +1,5 @@
 import { StyleSheet } from 'react-native'
 
-// Estilos do formulário de cadastro centralizados aqui
-// Facilita manutenção: mudar cores, tamanhos, etc. em um só lugar
-
 export const styles = StyleSheet.create({
   // ─── Container principal ────────────────────────────────────────────────
   scroll: {
@@ -52,9 +49,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 15,
     color: '#212121',
-    // Sombra leve no Android
     elevation: 1,
-    // Sombra leve no iOS
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
@@ -63,13 +58,13 @@ export const styles = StyleSheet.create({
 
   // ─── Seleção de sexo ────────────────────────────────────────────────────
   sexoContainer: {
-    flexDirection: 'row', // coloca os botões lado a lado
+    flexDirection: 'row',
     gap: 10,
     marginTop: 4,
   },
 
   sexoBotao: {
-    flex: 1, // distribui espaço igualmente entre os 3 botões
+    flex: 1,
     borderWidth: 1.5,
     borderColor: '#90a4ae',
     borderRadius: 8,
@@ -101,9 +96,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 15,
     alignItems: 'center',
-    // Sombra no Android
     elevation: 3,
-    // Sombra no iOS
     shadowColor: '#1a237e',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
