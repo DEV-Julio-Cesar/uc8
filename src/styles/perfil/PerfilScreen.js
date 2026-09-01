@@ -8,27 +8,16 @@ import {
   ScrollView,
   Alert,
 } from 'react-native'
-import { styles } from '../styles/perfilStyles'
+import { styles } from './perfilStyles'
 
-/**
- * Tela de Perfil de Usuário
- * Exibe informações do usuário estilo rede social
- * 
- * Props:
- * - onLogout: função para fazer logout e voltar ao login
- */
-export default function PerfilScreen({ onLogout, onAgendamento }) {
-  // ─── Estado do nome — pode ser alterado dinamicamente ────────────────────
+export default function PerfilScreen({ navigation }) {
   const [nome, setNome] = useState('Julio')
-
-  // ─── Estado da busca ─────────────────────────────────────────────────────
   const [textoBusca, setTextoBusca] = useState('')
 
-  // ─── Dados estáticos do usuário ──────────────────────────────────────────
   const usuario = {
-    nome: nome,          // usa o estado em vez de valor fixo
+    nome: nome,
     username: '@julio',
-    fotoPerfil: 'https://i.pravatar.cc/300?img=47', // foto aleatória
+    fotoPerfil: 'https://i.pravatar.cc/300?img=47',
     bio: 'Desenvolvedora mobile | React Native | Amante de tecnologia 💻',
     email: 'maria.silva@email.com',
     telefone: '(11) 98765-4321',
@@ -39,7 +28,6 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
     seguindo: 380,
   }
 
-  // ─── Função: Ver mais informações ────────────────────────────────────────
   function handleVerMais() {
     Alert.alert(
       'Informações do Perfil',
@@ -54,7 +42,6 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
     )
   }
 
-  // ─── Função: Realizar busca ──────────────────────────────────────────────
   function handleBusca() {
     if (!textoBusca.trim()) {
       Alert.alert('Busca', 'Digite algo para buscar.')
@@ -68,7 +55,6 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
     )
   }
 
-  // ─── Lista de ações rápidas ──────────────────────────────────────────────
   const acoes = [
     { id: 1, icone: '📝', titulo: 'Editar Perfil', descricao: 'Atualize suas informações' },
     { id: 2, icone: '⚙️', titulo: 'Configurações', descricao: 'Preferências e privacidade' },
@@ -89,9 +75,10 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
             text: 'Sair',
             style: 'destructive',
             onPress: () => {
-              if (onLogout) {
-                onLogout()
-              }
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              })
             }
           }
         ]
@@ -106,12 +93,10 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
     <View style={styles.container}>
     <ScrollView>
       
-      {/* ── Header ── */}
       <View style={styles.header}>
         <Text style={styles.headerTitulo}>Meu Perfil</Text>
       </View>
 
-      {/* ── Foto de Perfil + Nome ── */}
       <View style={styles.perfilContainer}>
         <Image
           source={{ uri: usuario.fotoPerfil }}
@@ -120,13 +105,11 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
         <Text style={styles.nome}>{usuario.nome}</Text>
         <Text style={styles.username}>{usuario.username}</Text>
 
-        {/* Botão Ver Mais */}
         <TouchableOpacity style={styles.botaoVerMais} onPress={handleVerMais}>
           <Text style={styles.botaoVerMaisTexto}>Ver mais</Text>
         </TouchableOpacity>
       </View>
 
-      {/* ── Estatísticas (Posts, Seguidores, Seguindo) ── */}
       <View style={styles.estatisticasContainer}>
         <View style={styles.estatisticaItem}>
           <Text style={styles.estatisticaNumero}>{usuario.posts}</Text>
@@ -142,7 +125,6 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
         </View>
       </View>
 
-      {/* ── Barra de Pesquisa ── */}
       <View style={styles.buscaContainer}>
         <TextInput
           style={styles.buscaInput}
@@ -155,7 +137,6 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
         />
       </View>
 
-      {/* ── Lista de Ações Rápidas ── */}
       <View style={styles.acoesContainer}>
         {acoes.map((acao) => (
           <TouchableOpacity
@@ -174,7 +155,6 @@ export default function PerfilScreen({ onLogout, onAgendamento }) {
         ))}
       </View>
 
-      {/* Espaçamento final */}
       <View style={{ height: 40 }} />
 
     </ScrollView>

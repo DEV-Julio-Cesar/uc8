@@ -1,13 +1,18 @@
 import React, { useState } from 'react'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker'
 import {
   View,
   Text,
   FlatList,
   TouchableOpacity,
+  Modal,
+  TextInput,
+  Alert,
+  Linking,
 } from 'react-native'
 import { styles } from './flatlistStyles'
 
+// ─── Dados ────────────────────────────────────────────────────────────────────
 const agendamentosIniciais = [
   { id: '1', nome: 'Julio',    tarefa: 'Reunião com o cliente'      },
   { id: '2', nome: 'Maria',    tarefa: 'Consulta médica'            },
@@ -19,132 +24,147 @@ const agendamentosIniciais = [
   { id: '8', nome: 'Beatriz',  tarefa: 'Treinamento na academia'    },
 ]
 
+// ─── Componente ───────────────────────────────────────────────────────────────
 export default function Agendamento() {
 
-  // Estado da lista com feito e data para cada agendamento
-  const [agendamentos, setAgendamentos] = useState(
-    agendamentosIniciais.map((item) => ({
-      ...item,
-      feito: false,
-      data: new Date(), // data inicial = hoje
-    }))
+  const [agendamentos, setAgendamentos]  = useState(
+    agendamentosIniciais.map((item) => ({ ...item, data: new Date() }))
   )
+  const [modalVisivel, setModalVisivel]  = useState(false)
+  const [novoNome, setNovoNome]          = useState('')
+  const [novaTarefa, setNovaTarefa]      = useState('')
 
-  // Controla qual item está com o picker aberto (null = nenhum)
-  const [itemSelecionado, setItemSelecionado] = useState(null)
+  // ─── Funções ──────────────────────────────────────────────────────────────
 
-  // Alterna feito/não feito
-  function alternarStatus(id) {
-    setAgendamentos(
-      agendamentos.map((item) => {
-        if (item.id === id) {
-          return { ...item, feito: !item.feito }
-        }
-        return item
-      })
-    )
+  function abrirLink() {
+    Linking.openURL('https://fast.com/pt/')
   }
 
-  // Abre o DateTimePicker para o item clicado
   function abrirPicker(id) {
-    setItemSelecionado(id)
+    DateTimePickerAndroid.open({
+      value: agendamentos.find((ag) => ag.id === id).data,
+      mode: 'date',
+      minimumDate: new Date(),
+      onValueChange: (evento, dataSelecionada) => {
+        if (dataSelecionada) {
+          setAgendamentos((lista) =>
+            lista.map((ag) =>
+              ag.id === id ? { ...ag, data: dataSelecionada } : ag
+            )
+          )
+        }
+      },
+    })
   }
 
-  // Formata a data para exibição: DD/MM/AAAA
+  function adicionarAgendamento() {
+    if (!novoNome || !novaTarefa) {
+      Alert.alert('Atenção', 'Preencha o nome e a tarefa.')
+      return
+    }
+    const novoItem = {
+      id: String(agendamentos.length + 1),
+      nome: novoNome,
+      tarefa: novaTarefa,
+      data: new Date(),
+    }
+    setAgendamentos([...agendamentos, novoItem])
+    setNovoNome('')
+    setNovaTarefa('')
+    setModalVisivel(false)
+  }
+
   function formatarData(data) {
-    // Garante que o valor é um objeto Date válido antes de chamar os métodos
-    const dataObj = data instanceof Date ? data : new Date(data)
-    const dia  = String(dataObj.getDate()).padStart(2, '0')
-    const mes  = String(dataObj.getMonth() + 1).padStart(2, '0')
-    const ano  = dataObj.getFullYear()
+    if (!data || !(data instanceof Date) || isNaN(data.getTime())) {
+      data = new Date()
+    }
+    const dia = String(data.getDate()).padStart(2, '0')
+    const mes = String(data.getMonth() + 1).padStart(2, '0')
+    const ano = data.getFullYear()
     return `${dia}/${mes}/${ano}`
   }
 
   function renderizarItem({ item }) {
     return (
       <View style={styles.card}>
-        <View style={styles.info}>
-          <Text style={styles.id}>#{item.id}</Text>
-          <Text style={styles.nome}>{item.nome}</Text>
-          <Text style={styles.tarefa}>{item.tarefa}</Text>
-
-          {/* Botão que abre o DateTimePicker */}
-          <TouchableOpacity
-            style={styles.botaoData}
-            onPress={() => abrirPicker(item.id)}
-          >
-            <Text style={styles.botaoDataTexto}>
-              📅 {formatarData(item.data)}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Exibe o picker apenas para o item selecionado */}
-          {itemSelecionado === item.id && (
-            <DateTimePicker
-              value={item.data}
-              mode="date"
-              display="default"
-              onValueChange={(dataSelecionada) => {
-                // dataSelecionada pode vir como timestamp (número) no Android
-                // então convertemos garantindo que é um Date válido
-                if (dataSelecionada !== undefined) {
-                  const novaData = dataSelecionada instanceof Date
-                    ? dataSelecionada
-                    : new Date(dataSelecionada)
-
-                  setAgendamentos(
-                    agendamentos.map((ag) => {
-                      if (ag.id === itemSelecionado) {
-                        return { ...ag, data: novaData }
-                      }
-                      return ag
-                    })
-                  )
-                }
-                setItemSelecionado(null) // fecha o picker
-              }}
-              onDismiss={() => setItemSelecionado(null)} // fecha ao cancelar
-            />
-          )}
-        </View>
-
-        {/* Botão feito/não feito */}
+        <Text style={styles.id}>#{item.id}</Text>
+        <Text style={styles.nome}>{item.nome}</Text>
+        <Text style={styles.tarefa}>{item.tarefa}</Text>
         <TouchableOpacity
-          style={[styles.botao, item.feito ? styles.botaoFeito : styles.botaoNaoFeito]}
-          onPress={() => alternarStatus(item.id)}
+          style={styles.botaoData}
+          onPress={() => abrirPicker(item.id)}
         >
-          <Text style={styles.botaoTexto}>
-            {item.feito ? 'Feito' : 'Não feito'}
-          </Text>
+          <Text style={styles.data}>📅 {formatarData(item.data)}</Text>
         </TouchableOpacity>
       </View>
     )
   }
 
+  // ─── Render ───────────────────────────────────────────────────────────────
   return (
     <View style={styles.container}>
+
       <Text style={styles.titulo}>Agendamentos</Text>
 
-      {/* Lista horizontal com nome e data */}
-      <FlatList
-        data={agendamentosIniciais}
-        keyExtractor={(item) => item.nome}
-        renderItem={({ item }) => (
-          <View style={styles.cardHorizontal}>
-            <Text style={styles.nome}>{item.nome}</Text>
-            <Text style={styles.tarefa}>{item.tarefa}</Text>
-          </View>
-        )}
-        horizontal
-      />
+      <TouchableOpacity onPress={abrirLink}>
+        <Text style={styles.link}>🔗 Testar velocidade da internet</Text>
+      </TouchableOpacity>
 
-      {/* Lista principal com feito/não feito e datepicker */}
       <FlatList
         data={agendamentos}
         keyExtractor={(item) => item.id}
         renderItem={renderizarItem}
       />
+
+      <TouchableOpacity
+        style={styles.botaoAdicionar}
+        onPress={() => setModalVisivel(true)}
+      >
+        <Text style={styles.botaoAdicionarTexto}>+ Novo Agendamento</Text>
+      </TouchableOpacity>
+
+      <Modal visible={modalVisivel} transparent={true} animationType="slide">
+        <View style={styles.modalFundo}>
+          <View style={styles.modalContainer}>
+
+            <Text style={styles.modalTitulo}>Novo Agendamento</Text>
+
+            <Text style={styles.modalLabel}>Nome:</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Digite o nome"
+              value={novoNome}
+              onChangeText={setNovoNome}
+            />
+
+            <Text style={styles.modalLabel}>Tarefa:</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Digite a tarefa"
+              value={novaTarefa}
+              onChangeText={setNovaTarefa}
+            />
+
+            <View style={styles.modalBotoes}>
+              <TouchableOpacity
+                style={[styles.modalBotao, styles.modalCancelar]}
+                onPress={() => setModalVisivel(false)}
+              >
+                <Text style={styles.modalBotaoTexto}>Cancelar</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.modalBotao, styles.modalSalvar]}
+                onPress={adicionarAgendamento}
+              >
+                <Text style={styles.modalBotaoTexto}>Salvar</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </View>
+      </Modal>
+
     </View>
   )
 }
-

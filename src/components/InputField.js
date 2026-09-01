@@ -1,5 +1,5 @@
 import { Text, TextInput } from 'react-native'
-import { styles } from '../styles/cadastroStyles'
+import { styles } from '../../../src/styles/cadastro/cadastroStyles'
 
 /**
  * Componente reutilizável para campos de entrada de texto

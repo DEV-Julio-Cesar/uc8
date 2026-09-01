@@ -1,59 +1,28 @@
-import { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 
-// ─── Importação das telas ─────────────────────────────────────────────────
-import LoginScreen from './src/screens/LoginScreen'
-import CadastroScreen from './src/screens/CadastroScreen'
-import TabNavigator from './src/components/TabNavigator'
+import LoginScreen from './src/styles/login/LoginScreen'
+import CadastroScreen from './src/styles/cadastro/CadastroScreen'
+import TabNavigator from './src/styles/tabNavigator/TabNavigator'
 
-/**
- * App principal
- * Sistema de navegação simples entre telas usando useState
- */
-export default function App() {
-  // ─── Estado de navegação ─────────────────────────────────────────────────
-  // Controla qual tela está visível: 'login', 'cadastro' ou 'perfil'
-  const [telaAtiva, setTelaAtiva] = useState('login')
+const Stack = createStackNavigator()
 
-  // ─── Funções de navegação ────────────────────────────────────────────────
-  function irParaLogin() {
-    setTelaAtiva('login')
-  }
-
-  function irParaCadastro() {
-    setTelaAtiva('cadastro')
-  }
-
-  function irParaApp() {
-    setTelaAtiva('app')
-  }
-
-  // ─── Renderização condicional ────────────────────────────────────────────
-  function renderizarTela() {
-    switch (telaAtiva) {
-      case 'login':
-        return <LoginScreen onCadastro={irParaCadastro} onLogin={irParaApp} />
-      case 'cadastro':
-        return <CadastroScreen onVoltar={irParaLogin} onCadastroSucesso={irParaApp} />
-      case 'app':
-        return <TabNavigator onLogout={irParaLogin} />
-      default:
-        return <LoginScreen onCadastro={irParaCadastro} onLogin={irParaApp} />
-    }
-  }
-
+function RootNavigator() {
   return (
-    <View style={styles.container}>
-      {renderizarTela()}
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Cadastro" component={CadastroScreen} />
+      <Stack.Screen name="App" component={TabNavigator} />
+    </Stack.Navigator>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f4f8',
-  },
-})
+export default function App() {
+  return (
+    <NavigationContainer>
+      <RootNavigator />
+      <StatusBar style="auto" />
+    </NavigationContainer>
+  )
+}
