@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Text } from 'react-native'
 
-import PerfilScreen from '../screens/perfil/PerfilScreen'
-import AgendamentoScreen from '../screens/agendamento/AgendamentoScreen'
-import ConfiguracaoScreen from '../screens/configuracao/ConfiguracaoScreen'
+import PerfilScreen from '../screens/PerfilScreen'
+import AgendamentoScreen from '../screens/AgendamentoScreen'
+import ConfiguracaoScreen from '../screens/ConfiguracaoScreen'
 
 const Tab = createBottomTabNavigator()
 

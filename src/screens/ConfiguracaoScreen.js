@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native'
 import { useState } from 'react'
-import { styles } from './configuracaoStyles'
+import { styles } from '../styles/configuracaoStyles'
 
 export default function ConfiguracaoScreen() {
   const [notificacoes, setNotificacoes] = useState(true)
@@ -11,26 +11,26 @@ export default function ConfiguracaoScreen() {
     {
       titulo: 'Conta',
       opcoes: [
-        { id: 1, icone: '🔒', titulo: 'Privacidade',        descricao: 'Controle quem vê seu perfil' },
-        { id: 2, icone: '🔑', titulo: 'Segurança',          descricao: 'Senha e autenticação'        },
-        { id: 3, icone: '📧', titulo: 'E-mail',             descricao: 'Gerencie seu e-mail'         },
+        { id: 1, icone: '🔒', titulo: 'Privacidade',   descricao: 'Controle quem vê seu perfil' },
+        { id: 2, icone: '🔑', titulo: 'Segurança',     descricao: 'Senha e autenticação'        },
+        { id: 3, icone: '📧', titulo: 'E-mail',        descricao: 'Gerencie seu e-mail'         },
       ],
     },
     {
       titulo: 'Preferências',
       opcoes: [
-        { id: 4, icone: '🌐', titulo: 'Idioma',             descricao: 'Português (Brasil)'          },
-        { id: 5, icone: '🔔', titulo: 'Notificações',       descricao: 'Alertas e lembretes', toggle: true, valor: notificacoes, aoMudar: setNotificacoes },
-        { id: 6, icone: '🌙', titulo: 'Modo Escuro',        descricao: 'Tema escuro do app',  toggle: true, valor: modoEscuro,   aoMudar: setModoEscuro   },
-        { id: 7, icone: '📍', titulo: 'Localização',        descricao: 'Acesso à sua posição', toggle: true, valor: localizacao, aoMudar: setLocalizacao  },
+        { id: 4, icone: '🌐', titulo: 'Idioma',        descricao: 'Português (Brasil)'                                                          },
+        { id: 5, icone: '🔔', titulo: 'Notificações',  descricao: 'Alertas e lembretes',  toggle: true, valor: notificacoes, aoMudar: setNotificacoes },
+        { id: 6, icone: '🌙', titulo: 'Modo Escuro',   descricao: 'Tema escuro do app',   toggle: true, valor: modoEscuro,   aoMudar: setModoEscuro   },
+        { id: 7, icone: '📍', titulo: 'Localização',   descricao: 'Acesso à sua posição', toggle: true, valor: localizacao,  aoMudar: setLocalizacao  },
       ],
     },
     {
       titulo: 'Suporte',
       opcoes: [
-        { id: 8, icone: '❓', titulo: 'Ajuda e Suporte',    descricao: 'Central de ajuda'            },
-        { id: 9, icone: '⭐', titulo: 'Avaliar o App',      descricao: 'Deixe sua opinião'           },
-        { id: 10, icone: '📄', titulo: 'Termos de Uso',     descricao: 'Políticas e privacidade'     },
+        { id: 8,  icone: '❓', titulo: 'Ajuda e Suporte', descricao: 'Central de ajuda'        },
+        { id: 9,  icone: '⭐', titulo: 'Avaliar o App',   descricao: 'Deixe sua opinião'       },
+        { id: 10, icone: '📄', titulo: 'Termos de Uso',   descricao: 'Políticas e privacidade' },
       ],
     },
   ]
