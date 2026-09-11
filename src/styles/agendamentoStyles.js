@@ -69,6 +69,13 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     color: '#1a237e',
     fontWeight: '600',
+    marginTop: 8,
+  },
+
+  listaVazia: {
+    textAlign: 'center',
+    color: '#78909c',
+    marginTop: 40,
   },
 
   // ─── Botão adicionar ──────────────────────────────────────────────────────

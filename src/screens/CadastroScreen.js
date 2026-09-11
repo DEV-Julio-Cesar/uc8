@@ -34,7 +34,7 @@ export default function CadastroScreen({ navigation }) {
     Alert.alert(
       'Cadastro realizado!',
       `Olá, ${nome}! Seus dados foram enviados com sucesso.`,
-      [{ text: 'OK', onPress: () => navigation.navigate('App') }]
+      [{ text: 'OK', onPress: () => navigation.navigate('Login', { nome: nome.trim() }) }]
     )
   }
 

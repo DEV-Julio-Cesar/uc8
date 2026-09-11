@@ -1,9 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Text } from 'react-native'
 
-import PerfilScreen from '../screens/PerfilScreen'
+import InicioScreen from '../screens/InicioScreen'
 import AgendamentoScreen from '../screens/AgendamentoScreen'
-import ConfiguracaoScreen from '../screens/ConfiguracaoScreen'
+import ContatoScreen from '../screens/ContatoScreen'
 
 const Tab = createBottomTabNavigator()
 
@@ -13,7 +13,7 @@ function TabIcone({ icone, focused }) {
   )
 }
 
-export default function TabNavigator({ navigation }) {
+export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -38,13 +38,12 @@ export default function TabNavigator({ navigation }) {
       }}
     >
       <Tab.Screen
-        name="Perfil"
+        name="Início"
+        component={InicioScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcone icone="👤" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcone icone="🏠" focused={focused} />,
         }}
-      >
-        {() => <PerfilScreen navigation={navigation} />}
-      </Tab.Screen>
+      />
 
       <Tab.Screen
         name="Agendamentos"
@@ -55,10 +54,10 @@ export default function TabNavigator({ navigation }) {
       />
 
       <Tab.Screen
-        name="Configurações"
-        component={ConfiguracaoScreen}
+        name="Contato"
+        component={ContatoScreen}
         options={{
-          tabBarIcon: ({ focused }) => <TabIcone icone="⚙️" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcone icone="☎️" focused={focused} />,
         }}
       />
     </Tab.Navigator>

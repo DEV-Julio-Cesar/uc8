@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "Restaurante Sabor da Casa",
+    "slug": "restaurante-sabor-da-casa",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": { "supportsTablet": true },
+    "android": { "edgeToEdgeEnabled": true }
+  }
+}

@@ -7,16 +7,22 @@ import {
   Alert,
 } from 'react-native'
 import { styles } from '../styles/loginStyles'
+import { useClinica } from '../context/ClinicaContext'
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, route }) {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
+  const { setNomePaciente } = useClinica()
 
   function handleLogin() {
     if (!email || !senha) {
       Alert.alert('Atenção', 'Por favor, preencha e-mail e senha.')
       return
     }
+
+    const nomeInformado = route.params?.nome?.trim()
+    const nomeDoEmail = email.trim().split('@')[0]
+    setNomePaciente(nomeInformado || nomeDoEmail || 'Paciente')
 
     Alert.alert(
       'Login realizado!',
