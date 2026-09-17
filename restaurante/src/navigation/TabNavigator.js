@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import CardapioScreen from '../screens/CardapioScreen'
 import CarrinhoScreen from '../screens/CarrinhoScreen'
 import PedidosScreen from '../screens/PedidosScreen'
+import CadastrarScreen from '../screens/CadastrarScreen'
 import { usePedido } from '../context/PedidoContext'
 
 const Tab = createBottomTabNavigator()
@@ -32,6 +33,9 @@ export default function TabNavigator() {
       }} />
       <Tab.Screen name="Pedidos" component={PedidosScreen} options={{
         tabBarIcon: ({ focused }) => <Icone valor="🧾" focused={focused} />,
+      }} />
+      <Tab.Screen name="Cadastro" component={CadastrarScreen} options={{
+        tabBarIcon: ({ focused }) => <Icone valor="👤" focused={focused} />,
       }} />
     </Tab.Navigator>
   )

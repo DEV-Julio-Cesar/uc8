@@ -30,4 +30,9 @@ export const styles = StyleSheet.create({
   pedidoData: { fontSize: 13, color: '#8d6e63', marginBottom: 8 },
   pedidoItem: { fontSize: 14, color: '#31221e', marginTop: 3 },
   erro: { backgroundColor: '#ffebee', color: '#b71c1c', padding: 10, marginHorizontal: 16, marginTop: 8, borderRadius: 8, textAlign: 'center' },
+  formulario: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 24, paddingBottom: 40 },
+  campoGrupo: { marginTop: 16 },
+  campoRotulo: { color: '#31221e', fontSize: 15, fontWeight: '600', marginBottom: 6 },
+  campo: { backgroundColor: '#fff', borderWidth: 1, borderColor: '#e4c9bb', borderRadius: 10, paddingHorizontal: 14, paddingVertical: 12, fontSize: 16, color: '#31221e' },
+  botaoDesabilitado: { opacity: 0.6 },
 })
