@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { CARDAPIO } from '../data/cardapio'
+import { ConectarBD, inicializarBanco } from '../../database/database'
+import { listarPratos } from '../../reporitory/pratoRepository'
 
 const CHAVE_CARRINHO = '@restaurante:carrinho'
 const CHAVE_PEDIDOS = '@restaurante:pedidos'
@@ -14,11 +16,11 @@ function lerJsonLimitado(valor) {
   return JSON.parse(valor)
 }
 
-function validarCarrinho(valor) {
+function validarCarrinho(valor, cardapio) {
   if (!Array.isArray(valor)) return []
 
-  return valor.slice(0, CARDAPIO.length).reduce((itensValidos, item) => {
-    const produtoExiste = CARDAPIO.some((produto) => produto.id === item?.produtoId)
+  return valor.slice(0, cardapio.length).reduce((itensValidos, item) => {
+    const produtoExiste = cardapio.some((produto) => produto.id === item?.produtoId)
     const produtoDuplicado = itensValidos.some((itemValido) => itemValido.produtoId === item?.produtoId)
     const quantidadeValida = Number.isInteger(item?.quantidade)
       && item.quantidade >= 1
@@ -29,7 +31,7 @@ function validarCarrinho(valor) {
   }, [])
 }
 
-function validarPedidos(valor) {
+function validarPedidos(valor, cardapio) {
   if (!Array.isArray(valor)) return []
 
   return valor.slice(0, MAXIMO_PEDIDOS).reduce((pedidosValidos, pedido) => {
@@ -40,8 +42,8 @@ function validarPedidos(valor) {
     const itens = validarCarrinho(pedido.itens.map((item) => ({
       produtoId: item?.produtoId,
       quantidade: item?.quantidade,
-    }))).map((item) => {
-      const produto = CARDAPIO.find((produtoAtual) => produtoAtual.id === item.produtoId)
+    })), cardapio).map((item) => {
+      const produto = cardapio.find((produtoAtual) => produtoAtual.id === item.produtoId)
       return { ...item, nome: produto.nome, precoCentavos: produto.precoCentavos }
     })
     if (itens.length === 0) return pedidosValidos
@@ -60,6 +62,7 @@ function validarPedidos(valor) {
 }
 
 export function PedidoProvider({ children }) {
+  const [cardapio, setCardapio] = useState(CARDAPIO)
   const [carrinho, setCarrinho] = useState([])
   const [pedidos, setPedidos] = useState([])
   const [carregando, setCarregando] = useState(true)
@@ -68,12 +71,16 @@ export function PedidoProvider({ children }) {
   useEffect(() => {
     async function carregarDados() {
       try {
+        const db = await ConectarBD()
+        await inicializarBanco(db)
+        const pratos = await listarPratos(db)
+        setCardapio(pratos)
         const [[, carrinhoSalvo], [, pedidosSalvos]] = await AsyncStorage.multiGet([
           CHAVE_CARRINHO,
           CHAVE_PEDIDOS,
         ])
-        setCarrinho(validarCarrinho(lerJsonLimitado(carrinhoSalvo)))
-        setPedidos(validarPedidos(lerJsonLimitado(pedidosSalvos)))
+        setCarrinho(validarCarrinho(lerJsonLimitado(carrinhoSalvo), pratos))
+        setPedidos(validarPedidos(lerJsonLimitado(pedidosSalvos), pratos))
       } catch {
         setErroArmazenamento('Não foi possível recuperar os dados salvos.')
       } finally {
@@ -101,7 +108,7 @@ export function PedidoProvider({ children }) {
   }, [pedidos, carregando])
 
   function alterarQuantidade(produtoId, diferenca) {
-    if (!CARDAPIO.some((produto) => produto.id === produtoId)) return
+    if (!cardapio.some((produto) => produto.id === produtoId)) return
 
     setCarrinho((listaAtual) => {
       const itemAtual = listaAtual.find((item) => item.produtoId === produtoId)
@@ -126,7 +133,7 @@ export function PedidoProvider({ children }) {
     if (carrinho.length === 0) return false
 
     const itens = carrinho.map((item) => {
-      const produto = CARDAPIO.find((produtoAtual) => produtoAtual.id === item.produtoId)
+      const produto = cardapio.find((produtoAtual) => produtoAtual.id === item.produtoId)
       return {
         produtoId: produto.id,
         nome: produto.nome,
@@ -151,9 +158,16 @@ export function PedidoProvider({ children }) {
   }
 
   const itensCarrinho = useMemo(() => carrinho.map((item) => {
-    const produto = CARDAPIO.find((produtoAtual) => produtoAtual.id === item.produtoId)
+    const produto = cardapio.find((produtoAtual) => produtoAtual.id === item.produtoId)
     return { ...produto, quantidade: item.quantidade }
-  }), [carrinho])
+  }).filter((item) => item.id), [carrinho, cardapio])
+
+  async function recarregarCardapio() {
+    const db = await ConectarBD()
+    const pratos = await listarPratos(db)
+    setCardapio(pratos)
+    setCarrinho((atual) => validarCarrinho(atual, pratos))
+  }
 
   const totalCentavos = useMemo(() => itensCarrinho.reduce(
     (total, item) => total + item.precoCentavos * item.quantidade,
@@ -163,12 +177,14 @@ export function PedidoProvider({ children }) {
   return (
     <PedidoContext.Provider value={{
       carregando,
+      cardapio,
       erroArmazenamento,
       itensCarrinho,
       pedidos,
       totalCentavos,
       alterarQuantidade,
       finalizarPedido,
+      recarregarCardapio,
     }}>
       {children}
     </PedidoContext.Provider>

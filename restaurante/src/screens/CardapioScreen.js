@@ -1,18 +1,24 @@
 import { View, Text, FlatList, ActivityIndicator } from 'react-native'
-import { CARDAPIO, formatarPreco } from '../data/cardapio'
+import { formatarPreco } from '../data/cardapio'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
 import { usePedido } from '../context/PedidoContext'
 import ControleQuantidade from '../components/ControleQuantidade'
 import { styles } from '../styles/styles'
 
 export default function CardapioScreen() {
-  const { carregando, erroArmazenamento, itensCarrinho, alterarQuantidade } = usePedido()
+  const { carregando, erroArmazenamento, cardapio, itensCarrinho, alterarQuantidade, recarregarCardapio } = usePedido()
+
+  useFocusEffect(useCallback(() => {
+    recarregarCardapio().catch(() => {})
+  }, []))
 
   function quantidadeDoProduto(produtoId) {
     return itensCarrinho.find((item) => item.id === produtoId)?.quantidade || 0
   }
 
   function renderizarItem({ item, index }) {
-    const mostrarCategoria = index === 0 || CARDAPIO[index - 1].categoria !== item.categoria
+    const mostrarCategoria = index === 0 || cardapio[index - 1].categoria !== item.categoria
     const quantidade = quantidadeDoProduto(item.id)
 
     return (
@@ -44,7 +50,7 @@ export default function CardapioScreen() {
       <Text style={styles.subtitulo}>Escolha seus itens</Text>
       {!!erroArmazenamento && <Text style={styles.erro}>{erroArmazenamento}</Text>}
       <FlatList
-        data={CARDAPIO}
+        data={cardapio}
         keyExtractor={(item) => item.id}
         renderItem={renderizarItem}
         contentContainerStyle={styles.lista}

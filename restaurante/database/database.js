@@ -1,4 +1,5 @@
 import * as SQLite from "expo-sqlite"
+import { CARDAPIO } from '../src/data/cardapio'
 
 export async function ConectarBD(){
  const db = await SQLite.openDatabaseAsync("database.db")
@@ -9,6 +10,50 @@ return db
 
     }else{
         console.log("Erro ao abrir o banco de dados")
+    }
+}
+
+export async function inicializarBanco(db) {
+    await db.execAsync(`
+        PRAGMA journal_mode = WAL;
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            email TEXT NOT NULL,
+            senha TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS pratos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            categoria TEXT NOT NULL,
+            nome TEXT NOT NULL,
+            descricao TEXT NOT NULL DEFAULT '',
+            preco_centavos INTEGER NOT NULL CHECK (preco_centavos > 0)
+        );
+        CREATE TABLE IF NOT EXISTS configuracoes (
+            chave TEXT PRIMARY KEY NOT NULL,
+            valor TEXT NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS idx_pratos_nome ON pratos(nome);
+    `)
+
+    const cardapioInicializado = await db.getFirstAsync(
+        "SELECT valor FROM configuracoes WHERE chave = 'cardapio_inicializado'"
+    )
+    if (!cardapioInicializado) {
+        await db.withExclusiveTransactionAsync(async (transacao) => {
+            const { total } = await transacao.getFirstAsync('SELECT COUNT(*) AS total FROM pratos')
+            if (total === 0) {
+                for (const prato of CARDAPIO) {
+                    await transacao.runAsync(
+                        'INSERT INTO pratos (categoria, nome, descricao, preco_centavos) VALUES (?, ?, ?, ?)',
+                        [prato.categoria, prato.nome, prato.descricao, prato.precoCentavos]
+                    )
+                }
+            }
+            await transacao.runAsync(
+                "INSERT INTO configuracoes (chave, valor) VALUES ('cardapio_inicializado', '1')"
+            )
+        })
     }
 }
 
